@@ -17,7 +17,8 @@ app.use('/api' ,  loginRuter);
 app.use('/api', Autorization,  routeData);
 app.use('/admin', UserRouter);
 
+const PORT = process.env.PORT || 3000
 
-app.listen(3000,() => {
+app.listen(PORT,() => {
     console.log('Server in runngi')
 })
