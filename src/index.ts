@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use('/api' ,  loginRuter);
 app.use('/api', Autorization,  routeData);
-app.use('/admin', UserRouter);
+app.use('/admin', Autorization, UserRouter);
 
 const PORT = process.env.PORT || 3000
 
