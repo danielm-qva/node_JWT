@@ -2,7 +2,7 @@ import getExpeditiousCache from 'express-expeditious'
 
 const cache = getExpeditiousCache({
   namespace: 'expresscache',
-  defaultTtl: '1 minute'
+  defaultTtl: '15 seconds'
 }); 
 
    export default cache ;
