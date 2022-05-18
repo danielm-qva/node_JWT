@@ -1,15 +1,14 @@
 import { Router } from "express";
 import cache  from '../cache/cacheinit' 
 
-import { listUser , findOneUser, addUser , blokUser} from '../controller/user.controller';
+import { listUser , findOneUser, addUser , updateUser } from '../controller/user.controller';
 
 
 const userRutas = Router()
 
-userRutas.get('/', cache.withTtl('1 hour') ,listUser)
-userRutas.get('/:id', cache.withTtl('1 hour'), findOneUser)
-userRutas.post('/', addUser )
-userRutas.put('/:id' , blokUser)
-
+userRutas.get('/user', cache.withTtl('1 hour') ,listUser)
+userRutas.get('/user/:id', cache.withTtl('1 hour'), findOneUser)
+userRutas.post('/user', addUser )
+userRutas.patch('/user/:id', updateUser)
 
 export default userRutas;

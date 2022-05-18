@@ -14,7 +14,8 @@ var app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use('/api', login_router_1.default);
 app.use('/api', autorization_services_1.Autorization, data_route_1.default);
-app.use('/admin', user_route_1.default);
-app.listen(3000, function () {
+app.use('/admin', autorization_services_1.Autorization, user_route_1.default);
+var PORT = process.env.PORT || 3000;
+app.listen(PORT, function () {
     console.log('Server in runngi');
 });

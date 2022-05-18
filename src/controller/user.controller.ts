@@ -1,55 +1,68 @@
 import { Response , Request } from "express"
 
-//data
-import { User } from '../db.static'
+import User from "../Models/user.model";
 
-export const listUser = (req: Request , res: Response) => {
-     setTimeout(() => {
-          res.status(200).send({User});
-     }, 2000);
+
+export const listUser = async (req: Request , res: Response) => {
+      const UserList = await User.findAll();
+      res.status(200).send({UserList});
 }
 
-export const findOneUser = (req: Request , res: Response) => {
-    const idFund  = parseInt(req.params['id'])
-        const oneUser = User.find(a => a.id === idFund)
-        if(oneUser) {
-             res.json({oneUser});
+export const addUser = async (req: Request , res: Response) => {
+     try {
+          const { name, lastName , email , password} = req.body ;
+          const useradd =  await User.create({name ,lastName , email , password})
+          if(useradd){
+               res.status(200).json({useradd})
+             }  
+             else
+             res.status(500).json({message : "An error has occurred" , data: useradd})
+          
+     } catch (error) {
+         res.status(500).json({message : "Something goes wrong", data:{}}); 
+     } 
+}
+
+export const findOneUser = async (req: Request , res: Response) => {
+          try {
+               const idFund  = parseInt(req.params['id'])
+               const oneUser =  await User.findOne({where : {id : idFund}});
+               if(oneUser) {
+                  res.status(200).json({data : oneUser})
+               }
+                else {
+                    res.status(404).json({"Mensaje" : "Resource not found"})
+                }
+          } catch (error) {
+                res.status(500).json({message : "Something goes wrong", data : {}}); 
           }
-          else
-          res.status(404).json({"Mensaje" : "Resource not found"})
-     
-}
-
-export const addUser = (req: Request , res: Response) => {
-      const { name ,  password} = req.body ;
-        const objerUser = { 
-                id : User.length + 1, 
-                 name,
-                 password,
-                 "isActive" : false
-        } 
-         User.push(objerUser)
-        res.status(200).json({objerUser})
-}
-
-export const blokUser = (req: Request , res: Response) => {
-     const idFund  = parseInt(req.params['id'])
-     const oneUser = User.find(a => a.id === idFund)
-    if(oneUser) {
-              User[oneUser.id - 1].isActive = true
-            res.status(204).send({"mensaje" : "Edit succes"})
-          }
-          else
-           res.status(404).send({"Mensaje" : "Resource not found"})
 }
 
 
+export const deleteUser =async (req: Request , res: Response) => {
+      try {
+          const id  = parseInt(req.params['id'])
+          const Userdelete = await User.destroy({
+                where: {id}
+          })
+          res.status(204).json({message : "User Delete succesfully", count : Userdelete}); 
+        
+      } catch (error) {
+          res.status(500).json({message : "Something goes wrong", data : {}}); 
+      }
 
+}
 
-
-
-
-
-
-
+export const updateUser= async (req: Request , res: Response) => {
+         try {
+              const oneUSer =  await User.findAll({where : {
+                     id : req.params['id']
+               }})
+                  await oneUSer[0].update(req.body);
+                  res.status(200).json({message: "User updata succesfully"})
+               
+         } catch (error) {
+            res.status(500).json({message: "Something goes wrong" , data : {}})      
+         }
+}
 

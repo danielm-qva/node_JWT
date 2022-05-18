@@ -1,22 +1,30 @@
 
 import { Response , Request , } from "express"
-import app from '../config';
 
 import jwt from 'jsonwebtoken';
 
-//data 
-import { User } from "../db.static";
+//Model data
+import User from "../Models/user.model";
 
-export const login =  (req:Request , resp:Response) => {
-   const {user, password} = req.body ;
-   const userfind = User.find(a => a.name === user && a.password === password); 
-   console.log(userfind);
-    if(userfind && !userfind.isActive){
-        const token = jwt.sign(user , app.SECRET);
-        resp.json({token});
-    }
-   else 
-   resp.status(400).json({mensaje : "You are not authorized to log in with this user..."});
+import doenv from 'dotenv';
+doenv.config();
+
+export const login = async (req:Request , resp:Response) => {
+     try {
+      const { email, password} = req.body ;
+      const userfind = await User.findOne({where: {
+          email,
+          password
+      }})
+       if(userfind && !userfind.getDataValue('isActive')){
+           const token = jwt.sign(String(userfind.getDataValue('email')), String(process.env.ACCES_TOKEN));
+           resp.json({token});
+       }
+      else 
+      resp.status(400).json({mensaje : "You are not authorized to log in with this user..."});
+     } catch (error) {
+      resp.status(500).json({mensaje : "You are not authorized to log in with this user..."});
+     }
 }
 
 export const Autorization  = (req: Request , respo: Response , next:any) => { 
@@ -27,7 +35,7 @@ export const Autorization  = (req: Request , respo: Response , next:any) => {
          }
          else
          try {
-            jwt.verify(token, app.SECRET)
+            jwt.verify(token, String(process.env.ACCES_TOKEN))
              next()
          } catch (error) {
                 respo.status(401).send({error})
