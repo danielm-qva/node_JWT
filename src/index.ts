@@ -1,5 +1,6 @@
 
-import express, { json , Request , Response } from 'express'
+import express from 'express'
+import cors from 'cors';
 
 // Rutas 
 import loginRuter from './router/login.router'
@@ -14,6 +15,7 @@ import connectionPostrege from './db.postgres';
 connectionPostrege();
 
 const app = express();
+app.use(cors())
 
 app.use(express.json());
 
