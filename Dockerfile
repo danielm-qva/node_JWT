@@ -8,4 +8,4 @@ RUN npm install && npm install typescript -g
 
 RUN npm run build
 
-CMD ['npm','run' ,'start']
+CMD ["npm","run","start"]
